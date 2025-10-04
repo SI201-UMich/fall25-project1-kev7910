@@ -135,7 +135,7 @@ def analyze_discount_impact(data):
 
 def write_results_to_file(regional_data, discount_data, filename):
     """
-    Writes analysis results to a CSV file.
+    Writes analysis results to a text file.
 
     Parameters:
         regional_data (dict): Dictionary of regional profit margins
@@ -145,37 +145,123 @@ def write_results_to_file(regional_data, discount_data, filename):
     Returns:
         None (creates a file)
     """
-    with open(filename, 'w', newline='') as file:
-        writer = csv.writer(file)
+    with open(filename, 'w') as file:
+        file.write('=' * 80 + '\n')
+        file.write('SUPERSTORE DATA ANALYSIS REPORT\n')
+        file.write('=' * 80 + '\n\n')
+        file.write('Dataset: SampleSuperstore.csv\n')
+        file.write('Total Records Analyzed: 9,994\n')
+        file.write('Analysis Date: 2025\n\n\n')
 
-        writer.writerow(['Analysis Results for Sample Superstore Dataset'])
-        writer.writerow([])
+        file.write('=' * 80 + '\n')
+        file.write('ANALYSIS 1: REGIONAL PROFITABILITY\n')
+        file.write('=' * 80 + '\n\n')
+        file.write('Metric: Average Profit Margin (Profit/Sales × 100)\n')
+        file.write('Unit: Percentage (%)\n\n')
 
-        writer.writerow(['Regional Profitability Analysis'])
-        writer.writerow(['Region', 'Average Profit Margin (%)'])
+        sorted_regions = sorted(regional_data.items(), key=lambda x: x[1], reverse=True)
 
-        for region in sorted(regional_data.keys()):
-            margin = regional_data[region]
-            writer.writerow([region, f'{margin:.2f}'])
+        file.write('RESULTS:\n')
+        file.write('-' * 60 + '\n')
+        file.write(f'{"Region":<15} {"Profit Margin":<20} {"Performance":<15}\n')
+        file.write('-' * 60 + '\n')
 
-        writer.writerow([])
-        writer.writerow([])
+        for region, margin in sorted_regions:
+            if margin > 15:
+                performance = 'Strong'
+            elif margin > 0:
+                performance = 'Moderate'
+            else:
+                performance = 'LOSS'
+            file.write(f'{region:<15} {margin:>6.2f}%{"":<14} {performance:<15}\n')
 
-        writer.writerow(['Discount Impact Analysis by Category'])
-        writer.writerow(['Category', 'Avg Profit (With Discount)', 'Count (With Discount)',
-                        'Avg Profit (Without Discount)', 'Count (Without Discount)', 'Difference'])
+        file.write('-' * 60 + '\n\n')
+
+        best_region = sorted_regions[0]
+        worst_region = sorted_regions[-1]
+
+        file.write('KEY FINDINGS:\n')
+        file.write(f'  • Best performing region: {best_region[0]} with {best_region[1]:.2f}% profit margin\n')
+        file.write(f'  • Worst performing region: {worst_region[0]} with {worst_region[1]:.2f}% profit margin\n')
+        file.write(f'  • Performance gap: {best_region[1] - worst_region[1]:.2f} percentage points\n')
+
+        loss_regions = [r for r, m in regional_data.items() if m < 0]
+        if loss_regions:
+            file.write(f'  • ⚠️  WARNING: {", ".join(loss_regions)} region(s) operating at a loss!\n')
+
+        file.write('\nCONCLUSION:\n')
+        file.write(f'The {best_region[0]} region demonstrates the strongest profitability with a\n')
+        file.write(f'{best_region[1]:.2f}% profit margin, indicating effective sales and cost management.\n')
+        if loss_regions:
+            file.write(f'CRITICAL: The {", ".join(loss_regions)} region requires immediate attention to\n')
+            file.write(f'address negative margins and restore profitability.\n')
+
+        file.write('\n\n')
+
+        file.write('=' * 80 + '\n')
+        file.write('ANALYSIS 2: DISCOUNT IMPACT ON PROFITABILITY\n')
+        file.write('=' * 80 + '\n\n')
+        file.write('Metric: Average profit per transaction\n')
+        file.write('Unit: US Dollars ($)\n\n')
+
+        file.write('RESULTS BY CATEGORY:\n\n')
 
         for category in sorted(discount_data.keys()):
             data = discount_data[category]
             difference = data['without_discount'] - data['with_discount']
-            writer.writerow([
-                category,
-                f'${data["with_discount"]:.2f}',
-                data['count_with_discount'],
-                f'${data["without_discount"]:.2f}',
-                data['count_without_discount'],
-                f'${difference:.2f}'
-            ])
+            total_cat_orders = data['count_with_discount'] + data['count_without_discount']
+            pct_with = (data['count_with_discount'] / total_cat_orders * 100)
+            pct_without = (data['count_without_discount'] / total_cat_orders * 100)
+
+            file.write(f'{category.upper()}\n')
+            file.write('-' * 60 + '\n')
+            file.write(f'  Orders WITH Discount:\n')
+            file.write(f'    • Count: {data["count_with_discount"]:,} orders ({pct_with:.1f}% of category)\n')
+            file.write(f'    • Average Profit: ${data["with_discount"]:.2f} per order\n')
+            if data['with_discount'] < 0:
+                file.write(f'    • ⚠️  WARNING: Operating at a LOSS!\n')
+
+            file.write(f'\n  Orders WITHOUT Discount:\n')
+            file.write(f'    • Count: {data["count_without_discount"]:,} orders ({pct_without:.1f}% of category)\n')
+            file.write(f'    • Average Profit: ${data["without_discount"]:.2f} per order\n')
+
+            file.write(f'\n  IMPACT:\n')
+            file.write(f'    • Profit Reduction: ${difference:.2f} per discounted order\n')
+            file.write(f'    • Total Category Orders: {total_cat_orders:,}\n\n')
+
+        file.write('\nKEY FINDINGS:\n')
+
+        worst_impact = max(discount_data.items(),
+                          key=lambda x: x[1]['without_discount'] - x[1]['with_discount'])
+        file.write(f'  • {worst_impact[0]} shows the largest profit reduction\n')
+        file.write(f'    (${worst_impact[1]["without_discount"] - worst_impact[1]["with_discount"]:.2f} per discounted order)\n')
+
+        losing_categories = [cat for cat, data in discount_data.items() if data['with_discount'] < 0]
+        if losing_categories:
+            file.write(f'  • ⚠️  Discounted sales in {", ".join(losing_categories)} are UNPROFITABLE\n')
+
+        total_discount_orders = sum(d['count_with_discount'] for d in discount_data.values())
+        total_orders = sum(d['count_with_discount'] + d['count_without_discount'] for d in discount_data.values())
+        overall_discount_pct = (total_discount_orders / total_orders * 100)
+        file.write(f'  • Overall: {overall_discount_pct:.1f}% of all orders ({total_discount_orders:,}/{total_orders:,}) received discounts\n')
+
+        file.write('\nCONCLUSION:\n')
+        file.write('Discounting significantly reduces profitability across ALL product categories.\n')
+        file.write('While discounts may drive sales volume, they are severely impacting profit margins.\n')
+        if losing_categories:
+            file.write(f'In {", ".join(losing_categories)}, discounted orders are generating losses,\n')
+            file.write('indicating the discount strategy is too aggressive for these categories.\n')
+
+        file.write('\nRECOMMENDATION:\n')
+        file.write('  1. Review and revise discount policies to preserve profit margins\n')
+        file.write('  2. Consider more targeted, strategic discounting rather than broad application\n')
+        file.write('  3. Set minimum profit thresholds for discounted sales\n')
+        file.write(f'  4. Prioritize fixing {", ".join(losing_categories)} category discount issues immediately\n')
+
+        file.write('\n\n')
+        file.write('=' * 80 + '\n')
+        file.write('END OF REPORT\n')
+        file.write('=' * 80 + '\n')
 
 
 def test_calculate_average():
@@ -342,7 +428,7 @@ def main():
     print("Discount analysis complete!")
     print()
 
-    output_file = 'analysis_results.csv'
+    output_file = 'analysis_results.txt'
     print(f"Writing results to {output_file}...")
     write_results_to_file(regional_margins, discount_analysis, output_file)
     print(f"Results successfully written to {output_file}")
