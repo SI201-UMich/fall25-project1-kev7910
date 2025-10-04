@@ -1,8 +1,9 @@
 """
-Name: Kevin Nguyen
-Student ID: [Your ID Here]
-Email: [Your Email Here]
-Collaborators: Claude (GenAI tool) - Used for code structure and function implementation
+Name: Kevin Zang
+Student ID: 72328773
+Email: alvinz@umich.edu
+Collaborators: Worked alone.
+Used AI for  function design, syntax, implementation for output txt file, etc.
 
 Function Authors:
 - load_csv(): Created with assistance from Claude
