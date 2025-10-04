@@ -1,0 +1,115 @@
+================================================================================
+SUPERSTORE DATA ANALYSIS REPORT
+================================================================================
+
+Dataset: SampleSuperstore.csv
+Total Records Analyzed: 9,994
+Analysis Date: 2025
+
+
+================================================================================
+ANALYSIS 1: REGIONAL PROFITABILITY
+================================================================================
+
+Metric: Average Profit Margin (Profit/Sales × 100)
+Unit: Percentage (%)
+
+RESULTS:
+------------------------------------------------------------
+Region          Profit Margin        Performance    
+------------------------------------------------------------
+West             21.95%               Strong         
+East             16.72%               Strong         
+South            16.35%               Strong         
+Central         -10.41%               LOSS           
+------------------------------------------------------------
+
+KEY FINDINGS:
+  • Best performing region: West with 21.95% profit margin
+  • Worst performing region: Central with -10.41% profit margin
+  • Performance gap: 32.36 percentage points
+  • ⚠️  WARNING: Central region(s) operating at a loss!
+
+CONCLUSION:
+The West region demonstrates the strongest profitability with a
+21.95% profit margin, indicating effective sales and cost management.
+CRITICAL: The Central region requires immediate attention to
+address negative margins and restore profitability.
+
+
+================================================================================
+ANALYSIS 2: DISCOUNT IMPACT ON PROFITABILITY
+================================================================================
+
+Metric: Average profit per transaction
+Unit: US Dollars ($)
+
+RESULTS BY CATEGORY:
+
+FURNITURE
+------------------------------------------------------------
+  Orders WITH Discount:
+    • Count: 1,285 orders (60.6% of category)
+    • Average Profit: $-30.88 per order
+    • ⚠️  WARNING: Operating at a LOSS!
+
+  Orders WITHOUT Discount:
+    • Count: 836 orders (39.4% of category)
+    • Average Profit: $69.54 per order
+
+  IMPACT:
+    • Profit Reduction: $100.42 per discounted order
+    • Total Category Orders: 2,121
+
+OFFICE SUPPLIES
+------------------------------------------------------------
+  Orders WITH Discount:
+    • Count: 2,897 orders (48.1% of category)
+    • Average Profit: $-2.77 per order
+    • ⚠️  WARNING: Operating at a LOSS!
+
+  Orders WITHOUT Discount:
+    • Count: 3,129 orders (51.9% of category)
+    • Average Profit: $41.71 per order
+
+  IMPACT:
+    • Profit Reduction: $44.48 per discounted order
+    • Total Category Orders: 6,026
+
+TECHNOLOGY
+------------------------------------------------------------
+  Orders WITH Discount:
+    • Count: 1,014 orders (54.9% of category)
+    • Average Profit: $12.93 per order
+
+  Orders WITHOUT Discount:
+    • Count: 833 orders (45.1% of category)
+    • Average Profit: $158.88 per order
+
+  IMPACT:
+    • Profit Reduction: $145.96 per discounted order
+    • Total Category Orders: 1,847
+
+
+KEY FINDINGS:
+  • Technology shows the largest profit reduction
+    ($145.96 per discounted order)
+  • ⚠️  Discounted sales in Furniture, Office Supplies are UNPROFITABLE
+  • Overall: 52.0% of all orders (5,196/9,994) received discounts
+
+CONCLUSION:
+Discounting significantly reduces profitability across ALL product categories.
+While discounts may drive sales volume, they are severely impacting profit margins.
+In Furniture, Office Supplies, discounted orders are generating losses,
+indicating the discount strategy is too aggressive for these categories.
+
+RECOMMENDATION:
+  1. Review and revise discount policies to preserve profit margins
+  2. Consider more targeted, strategic discounting rather than broad application
+  3. Set minimum profit thresholds for discounted sales
+  4. Prioritize fixing Furniture, Office Supplies category discount issues immediately
+
+
+================================================================================
+END OF REPORT
+================================================================================
