@@ -3,7 +3,7 @@ Name: Kevin Zang
 Student ID: 72328773
 Email: alvinz@umich.edu
 Collaborators: Worked alone.
-Used AI for  function design, syntax, implementation for output txt file, etc.
+Used AI for  function design, syntax, implementation for output txt file (especially styling), tests, etc.
 
 Function Authors:
 - load_csv(): Created with assistance from Claude
